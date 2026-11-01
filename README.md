@@ -15,7 +15,7 @@ In a spreadsheet of open deals, it's hard to see which ones have gone quiet. A m
 - the reps with the most stale value (the top quarter by value)
 - for each flagged rep: deal count, total stale value, oldest deal, and their three highest-value stale deals
 
-![Monday report email](images/email report.png)
+![Monday report email](images/email-report.png)
 
 **2. Manager dashboard.** A web page where the manager can:
 - switch between reps with a dropdown
@@ -267,7 +267,6 @@ stale-deal-tracker/
 
 Python (pandas) for the analysis. Google Sheets, Google Apps Script (JavaScript), HTML and CSS for the tool.
 
-## License and data credit
+## Data Source
 
-Code: [MIT License](LICENSE)
-Data: Maven Analytics, CRM Sales Opportunities sample dataset. See their site for terms.
+Data: [Maven Analytics, CRM Sales Opportunities](https://mavenanalytics.io/data-playground/crm-sales-opportunities)
