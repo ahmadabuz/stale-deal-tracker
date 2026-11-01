@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta charset="utf-8">
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; color: #222; }
+    h1 { font-size: 20px; margin: 0 0 6px; }
+    .sub { color: #666; margin-bottom: 14px; }
+    .chips { display: flex; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; }
+    .chip { background: #f3f4f6; border-radius: 8px; padding: 10px 14px; }
+    .chip b { display: block; font-size: 18px; }
+    table { border-collapse: collapse; width: 100%; font-size: 14px; }
+    th, td { text-align: left; padding: 8px; border-bottom: 1px solid #e5e7eb; }
+    th { background: #f9fafb; }
+    .badge { padding: 2px 8px; border-radius: 10px; font-size: 12px; white-space: nowrap; }
+    .Qualify { background: #fee2e2; color: #991b1b; }
+    .Check { background: #fef3c7; color: #92400e; }
+    .On { background: #dcfce7; color: #166534; }
+  </style>
+</head>
+<body>
+  <div id="root">Loading...</div>
+  <script>
+    let selectedRep = null;
+
+    function el(tag, text, cls) {
+      const e = document.createElement(tag);
+      if (text !== undefined && text !== null) e.textContent = text;
+      if (cls) e.className = cls;
+      return e;
+    }
+
+    function load() {
+      google.script.run.withSuccessHandler(render).withFailureHandler(showError).getPageData(selectedRep);
+    }
+
+    function showError(e) {
+      document.getElementById("root").textContent = "Error: " + e.message;
+    }
+
+    function render(data) {
+      const root = document.getElementById("root");
+      root.textContent = "";
+      if (data.error) { root.appendChild(el("p", data.error)); return; }
+      selectedRep = data.rep;
+
+      root.appendChild(el("h1", "My Deals: " + data.rep));
+      root.appendChild(el("p", "Read-only view.", "sub"));
+
+      const sel = el("select");
+      data.repNames.forEach(n => {
+        const o = el("option", n); o.value = n; if (n === data.rep) o.selected = true;
+        sel.appendChild(o);
+      });
+      sel.onchange = () => { selectedRep = sel.value; load(); };
+      root.appendChild(sel);
+
+      const act = data.deals.filter(d => d.needsAction);
+      const actValue = act.reduce((s, d) => s + d.price, 0);
+      const chips = el("div", null, "chips");
+      [["Open deals", data.deals.length],
+       ["Need action", act.length],
+       ["Value needing action", "$" + actValue.toLocaleString()]].forEach(([label, val]) => {
+        const c = el("div", null, "chip");
+        c.appendChild(el("b", val));
+        c.appendChild(document.createTextNode(label));
+        chips.appendChild(c);
+      });
+      root.appendChild(chips);
+
+      const table = el("table");
+      const head = el("tr");
+      ["Account", "Product", "Value", "Age (days)", "Status", "Last contact", "Note"]
+        .forEach(h => head.appendChild(el("th", h)));
+      table.appendChild(head);
+
+      data.deals.forEach(d => {
+        const tr = el("tr");
+        tr.appendChild(el("td", d.account || "no account yet"));
+        tr.appendChild(el("td", d.product));
+        tr.appendChild(el("td", "$" + d.price.toLocaleString()));
+        tr.appendChild(el("td", d.age));
+        const st = el("td");
+        st.appendChild(el("span", d.tier, "badge " + String(d.tier).split(" ")[0]));
+        tr.appendChild(st);
+        tr.appendChild(el("td", d.lastContact || "-"));
+        tr.appendChild(el("td", d.note || "-"));
+        table.appendChild(tr);
+      });
+      root.appendChild(table);
+    }
+
+    load();
+  </script>
+</body>
+</html>
