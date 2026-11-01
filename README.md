@@ -169,7 +169,7 @@ Set in `CONFIG` at the top of `Code.gs`:
 | `topDealsPerRep` | `3` | Deals listed per flagged rep in the email |
 | `openStages` | `Engaging`, `Prospecting` | Deal stages treated as open |
 
-## Public read-only version (optional)
+## Public read-only version 
 
 To share a live demo without giving write access, make a second Apps Script project bound to the same sheet, using the files in `apps-script/read-only/`. It has no `logContact` and no `sendManagerReport`, so the page can only read.
 
