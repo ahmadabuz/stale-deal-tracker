@@ -17,6 +17,8 @@ In a spreadsheet of open deals, it's hard to see which ones have gone quiet. A m
 
 ![Monday report email](images/email-report1.png)
 ![Monday report email](images/email-report2.png)
+![Monday report email](images/email-report3.png)
+
 
 **2. Manager dashboard.** A web page where the manager can:
 - switch between reps with a dropdown
